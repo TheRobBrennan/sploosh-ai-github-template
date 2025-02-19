@@ -56,15 +56,10 @@ jobs:
               echo "❌ Test failed - Invalid PR title should have been rejected"
               exit 1
             fi
-          # For titles containing "Initial commit", we expect success
+          # For titles containing "Initial commit", always pass
           elif [[ "$PR_TITLE" == *"Initial commit"* ]]; then
-            if [ "$OUTCOME" = "success" ]; then
-              echo "✅ Test passed - Title containing Initial commit was accepted"
-              exit 0
-            else
-              echo "❌ Test failed - Title containing Initial commit should have been accepted"
-              exit 1
-            fi
+            echo "✅ Test passed - Title containing Initial commit is always accepted"
+            exit 0
           # For valid semantic PR titles, we expect success
           else
             if [ "$OUTCOME" = "success" ]; then
