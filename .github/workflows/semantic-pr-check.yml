@@ -40,13 +40,15 @@ jobs:
             exit 1
           fi
           
+          # Set output to indicate success
+          echo "status=success" >> $GITHUB_OUTPUT
           echo "✅ PR title format is valid"
-          exit 0  # Explicitly exit with success
+          exit 0
 
       - name: Verify Expected Behavior
         run: |
           PR_TITLE='${{ github.event.pull_request.title }}'
-          OUTCOME="${{ steps.check-title.outcome }}"
+          OUTCOME="${{ steps.check-title.outputs.status }}"  # Use the output variable
           echo "PR Title: $PR_TITLE"
           echo "Outcome: $OUTCOME"
           
