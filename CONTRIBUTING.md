@@ -25,7 +25,7 @@ All commits must be signed using GPG keys. To set up commit signing:
 
 ## Commit Message Format
 
-This project follows [Conventional Commits](https://www.conventionalcommits.org/).
+This project follows [Conventional Commits](https://www.conventionalcommits.org/). The only exception is that "Initial commit" is allowed as a valid commit message for the first commit.
 
 PR titles should be formatted with a prefix indicating the type of change - e.g. `fix: use github.actor for local workflow detection #15
 `

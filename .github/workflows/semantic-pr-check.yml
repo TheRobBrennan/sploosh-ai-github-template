@@ -30,11 +30,12 @@ jobs:
           echo "Checking PR title: $PR_TITLE"
           
           # Check if title starts with valid type (including breaking change ! for any type)
-          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): ]]; then
+          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): |^Initial\ commit$ ]]; then
             echo "❌ PR title must start with one of these types, optionally followed by ! for breaking changes:"
             echo "feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
             echo "Example: feat: new feature"
             echo "Example: fix!: breaking bug fix"
+            echo "Note: 'Initial commit' is also accepted as a valid title"
             echo "See CONTRIBUTING.md for more details on commit message format."
             exit 1
           fi
