@@ -44,9 +44,10 @@ jobs:
 
       - name: Verify Expected Behavior
         run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
           # For invalid PR titles, we expect failure
-          if [[ "${{ github.event.pull_request.title }}" == "adding some feature without proper format" ]]; then
-            if [[ "${{ steps.check-title.outcome }}" == "failure" ]]; then
+          if [ "$PR_TITLE" = "adding some feature without proper format" ]; then
+            if [ "${{ steps.check-title.outcome }}" = "failure" ]; then
               echo "✅ Test passed - Invalid PR title was rejected as expected"
               exit 0
             else
@@ -55,7 +56,7 @@ jobs:
             fi
           # For valid semantic PR titles, we expect success
           else
-            if [[ "${{ steps.check-title.outcome }}" == "success" ]]; then
+            if [ "${{ steps.check-title.outcome }}" = "success" ]; then
               echo "✅ Test passed - Valid semantic PR title was accepted"
               exit 0
             else
