@@ -41,10 +41,16 @@ jobs:
           PR_TITLE="${{ github.event.head_commit.message }}"
           echo "PR Title: $PR_TITLE"
           
-          if [[ "$PR_TITLE" =~ feat!: || "$PR_TITLE" =~ fix!: || "$PR_TITLE" =~ refactor!: ]]; then
+          # For titles containing "Initial commit", always use patch
+          if [[ "$PR_TITLE" == *"Initial commit"* ]]; then
+            echo "bump_type=patch" >> $GITHUB_OUTPUT
+          # For breaking changes
+          elif [[ "$PR_TITLE" =~ feat!: || "$PR_TITLE" =~ fix!: || "$PR_TITLE" =~ refactor!: ]]; then
             echo "bump_type=major" >> $GITHUB_OUTPUT
+          # For new features
           elif [[ "$PR_TITLE" =~ feat: ]]; then
             echo "bump_type=minor" >> $GITHUB_OUTPUT
+          # For everything else
           else
             echo "bump_type=patch" >> $GITHUB_OUTPUT
           fi
