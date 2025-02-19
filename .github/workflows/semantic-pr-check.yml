@@ -44,7 +44,7 @@ jobs:
 
       - name: Verify Expected Behavior
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
           
           # For invalid PR titles, we expect failure
           if [ "$PR_TITLE" = "adding some feature without proper format" ]; then
