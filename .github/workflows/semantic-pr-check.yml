@@ -42,10 +42,10 @@ jobs:
       - name: Verify Expected Behavior
         run: |
           PR_TITLE='${{ github.event.pull_request.title }}'
-          if [ "${{ steps.check-title.outcome }}" = "success" ]; then
-            OUTCOME="success"
-          else
+          if [ "${{ steps.check-title.outcome }}" = "failure" ]; then
             OUTCOME="failure"
+          else
+            OUTCOME="success"
           fi
           
           echo "PR Title: $PR_TITLE"
