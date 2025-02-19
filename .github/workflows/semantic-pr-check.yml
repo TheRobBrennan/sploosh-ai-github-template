@@ -29,7 +29,7 @@ jobs:
           PR_TITLE="${{ github.event.pull_request.title }}"
           echo "Checking PR title: $PR_TITLE"
           
-          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): |^Initial\ commit$ ]]; then
+          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)\: |^Initial\ commit$ ]]; then
             echo "status=failure" >> "$GITHUB_OUTPUT"
             echo "❌ PR title must start with one of these types..."
             exit 1
