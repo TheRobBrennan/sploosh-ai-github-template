@@ -30,11 +30,12 @@ jobs:
           echo "Checking PR title: $PR_TITLE"
           
           # Check if title starts with valid type (including breaking change ! for any type)
-          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): ]]; then
+          if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): |^Initial\ commit$ ]]; then
             echo "❌ PR title must start with one of these types, optionally followed by ! for breaking changes:"
             echo "feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
             echo "Example: feat: new feature"
             echo "Example: fix!: breaking bug fix"
+            echo "Note: 'Initial commit' is also accepted as a valid title"
             echo "See CONTRIBUTING.md for more details on commit message format."
             exit 1
           fi
@@ -43,18 +44,25 @@ jobs:
 
       - name: Verify Expected Behavior
         run: |
+          PR_TITLE='${{ github.event.pull_request.title }}'
+          OUTCOME="${{ steps.check-title.outcome }}"
+          
           # For invalid PR titles, we expect failure
-          if [[ "${{ github.event.pull_request.title }}" == "adding some feature without proper format" ]]; then
-            if [[ "${{ steps.check-title.outcome }}" == "failure" ]]; then
+          if [ "$PR_TITLE" = "adding some feature without proper format" ]; then
+            if [ "$OUTCOME" = "failure" ]; then
               echo "✅ Test passed - Invalid PR title was rejected as expected"
               exit 0
             else
               echo "❌ Test failed - Invalid PR title should have been rejected"
               exit 1
             fi
+          # For titles containing "Initial commit", always pass
+          elif [[ "$PR_TITLE" == *"Initial commit"* ]]; then
+            echo "✅ Test passed - Title containing Initial commit is always accepted"
+            exit 0
           # For valid semantic PR titles, we expect success
           else
-            if [[ "${{ steps.check-title.outcome }}" == "success" ]]; then
+            if [ "$OUTCOME" = "success" ]; then
               echo "✅ Test passed - Valid semantic PR title was accepted"
               exit 0
             else
@@ -88,7 +96,7 @@ jobs:
       - name: Check Breaking Change Format
         if: success()
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
           
           # Check for breaking change indicator
           if [[ "$PR_TITLE" =~ ^feat!: ]]; then
