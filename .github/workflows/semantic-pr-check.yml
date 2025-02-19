@@ -47,6 +47,8 @@ jobs:
         run: |
           PR_TITLE='${{ github.event.pull_request.title }}'
           OUTCOME="${{ steps.check-title.outcome }}"
+          echo "PR Title: $PR_TITLE"
+          echo "Outcome: $OUTCOME"
           
           # For invalid PR titles, we expect failure
           if [ "$PR_TITLE" = "adding some feature without proper format" ]; then
