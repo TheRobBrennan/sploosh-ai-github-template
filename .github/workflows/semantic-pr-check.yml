@@ -24,31 +24,30 @@ jobs:
           
       - name: Check PR Title Format
         id: check-title
-        continue-on-error: true  # Allow the step to fail without failing the job
+        continue-on-error: true
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           echo "Checking PR title: $PR_TITLE"
           
-          # Check if title starts with valid type (including breaking change ! for any type)
           if [[ ! "$PR_TITLE" =~ ^(feat!|fix!|docs!|style!|refactor!|perf!|test!|build!|ci!|chore!|revert!|feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert): |^Initial\ commit$ ]]; then
-            echo "❌ PR title must start with one of these types, optionally followed by ! for breaking changes:"
-            echo "feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
-            echo "Example: feat: new feature"
-            echo "Example: fix!: breaking bug fix"
-            echo "Note: 'Initial commit' is also accepted as a valid title"
-            echo "See CONTRIBUTING.md for more details on commit message format."
+            echo "status=failure" >> "$GITHUB_OUTPUT"
+            echo "❌ PR title must start with one of these types..."
             exit 1
           fi
           
-          # Set output to indicate success
-          echo "status=success" >> $GITHUB_OUTPUT
+          echo "status=success" >> "$GITHUB_OUTPUT"
           echo "✅ PR title format is valid"
           exit 0
 
       - name: Verify Expected Behavior
         run: |
           PR_TITLE='${{ github.event.pull_request.title }}'
-          OUTCOME="${{ steps.check-title.outputs.status }}"  # Use the output variable
+          if [ "${{ steps.check-title.outcome }}" = "success" ]; then
+            OUTCOME="success"
+          else
+            OUTCOME="failure"
+          fi
+          
           echo "PR Title: $PR_TITLE"
           echo "Outcome: $OUTCOME"
           
