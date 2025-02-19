@@ -96,7 +96,7 @@ jobs:
       - name: Check Breaking Change Format
         if: success()
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
           
           # Check for breaking change indicator
           if [[ "$PR_TITLE" =~ ^feat!: ]]; then
